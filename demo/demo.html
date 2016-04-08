@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  
+</head>
+<body>
+
+<div id="demo"><h2>Let Dopamine change this text</h2></div>
+<button type="button" onclick="test()">Change Content</button>
+
+</body>
+
+
+
+<script type="text/javascript" src="./DopamineLibrary.js" >
+  </script>
+
+<script>
+function test()
+{
+
+  // Create object
+  var dopamine = Dopamine();
+
+
+  // Configure credentials
+  dopamine.config("53c6f35be803829b4b702174", "68b87f1de29c1620e376b524996fa31e66d7d171", "0512be3612b1a205d836a19ff9d32e0045e0502d", false, "MovnTestVersion");
+
+
+  // Run a test and store the result
+  var s = dopamine.reinforce("ActionGoalAchieved", "canBeNothingImportantSinceDevelopment");
+
+  // Display the result
+  document.getElementById("demo").innerHTML = s;
+
+}
+
+
+</script>
+</html>
