@@ -55,9 +55,9 @@ The Dopamine API learns how to reinforce your users faster when you use it to tr
 Where:
 * `actionID (string)`: A unique name for this action.
 * `primaryIdentity (string)` : A unique identifier for this user. 
-* `metaData (object)` : metadata about the event passed in as a key-value object.
+* `metaData (dictionary)` : metadata about the event passed in as a key-value object, also known as a dictionary.
 
-The `primaryIdentity` should be formatted as a unique string. For example, some apps use things like randomly generated numbers like "1138", others use things like the user's device id "8483952fbb761c43", while many prefer to use email addresses like "user@host.com". Whatever you use, just put at least one user identity object in the array.
+The `primaryIdentity` should be formatted as a unique string. For example, some apps use things like randomly generated numbers like "1138", others use things like the user's device id "8483952fbb761c43", while many prefer to use email addresses like "user@host.com". Whatever you use, just put at least one user identity string in the array.
 
 
 ####Reinforce your users with the API.
@@ -66,7 +66,16 @@ When you call the API we determine whether or not a reward or neutral feedback w
 
 Use the `dopamine.reinforce( )` method in a switch statement as shown in `demo/demo.js`. The `case` values will match the names of the actions your paired using the `dopamine.pairReinforcement( )` method. For example:
 
-`switch(dopamine.reinforce(actionID, primaryIdentity));`
+`switch( dopamine.reinforce(actionID, primaryIdentity) )
+{
+	case 'GoalAchievedRewardFunction':
+		rewardFunction();
+		break;
+
+	case 'NeutralFeedback':
+		feedbackFunction();
+		break;
+}`
 
 Each `case( )` value should match a name of a Reinforcement Function (both Reward Functions and Feedback Functions) you specified on the dashboard. The content of each case should call the Reinforcement Function you wrote that will deliver the user a delightful reward or neutral feedback!
 
