@@ -26,25 +26,42 @@
       self.credentials.versionID = versionID;
     };
   
-    self.reinforce = function(actionID, identity, metaData)
+    self.reinforce = function(actionID, identity, metaData, options, callback)
     {
-      var response = sendCall(buildPayload('reinforce', actionID, identity, metaData), 'reinforce');
-      
-      if(response.status === 200)
-      {
-        // Good status
-        return response.reinforcementDecision;
+      var options = options || { useAsync: false };
+
+      var wrappedCallback = function (err, result) {
+        var callback = callback || function (err, result) {};
+        if(result.status === 200)
+        {
+          // Good status
+          callback(null, result.reinforcementDecision);
+        }
+        else{
+          // Bad status
+          callback(result.error);
+        }
       }
-      else{
-        // Bad status
-        return response.error;
+
+      var response = sendCall(buildPayload('reinforce', actionID, identity, metaData),
+                              'reinforce', options, wrappedCallback);
+
+      if (!options.useAsync) {
+        if(response.status === 200)
+        {
+          // Good status
+          return response.reinforcementDecision;
+        }
+        else{
+          // Bad status
+          return response.error;
+        }
       }
-  
     }
   
-    self.track = function(actionID, identity, metaData)
+    self.track = function(actionID, identity, metaData, options, callback)
     {
-      var response = sendCall(buildPayload('track', actionID, identity, metaData), 'track');
+      sendCall(buildPayload('track', actionID, identity, metaData), 'track', options, callback);
     }
   
     function buildPayload(type, actionID, identity, metaData)
@@ -67,18 +84,26 @@
       return payload;
     }
   
-    function sendCall(data, type)
+    function sendCall(data, type, options, callback)
     {
+      var callback = callback || function (err, result) {};
+      var options = options || { useAsync: false };
       var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", 'https://staging-api.usedopamine.com/v3/app/' + type + '/', false);
+      if (options.useAsync) {
+        xhttp.onload = function (e) {
+          callback(null, JSON.parse(xhttp.responseText));
+        }
+      }
+
+      xhttp.open("POST", 'https://staging-api.usedopamine.com/v3/app/' + type + '/', options.useAsync);
       xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       xhttp.send(JSON.stringify(data));
   
       // return response string as JSON object
-      return JSON.parse(xhttp.responseText);
+      if (!options.useAsync) {
+        return JSON.parse(xhttp.responseText);
+      }
     }
-  
-  
   }
 
   return Dopamine;
