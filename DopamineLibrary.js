@@ -28,10 +28,9 @@
   
     self.reinforce = function(actionID, identity, metaData, options, callback)
     {
+      var callback = callback || function (err, result) {};
       var options = options || { useAsync: false };
-
       var wrappedCallback = function (err, result) {
-        var callback = callback || function (err, result) {};
         if(result.status === 200)
         {
           // Good status
