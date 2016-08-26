@@ -94,7 +94,7 @@
         }
       }
 
-      xhttp.open("POST", 'https://staging-api.usedopamine.com/v3/app/' + type + '/', options.useAsync);
+      xhttp.open("POST", 'https://api.usedopamine.com/v3/app/' + type + '/', options.useAsync);
       xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       xhttp.send(JSON.stringify(data));
   
